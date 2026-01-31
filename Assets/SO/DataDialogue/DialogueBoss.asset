@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3149552f94c728449cfdfa696be5d39, type: 3}
   m_Name: DialogueBoss
   m_EditorClassIdentifier: 
-  NPCName: 
+  NPCName: "Ch\u1EE7 ti\u1EC7m s\u1EEDa m\u1EB7t n\u1EA1"
   dialogueLines:
-  - "Oh\u2014hello there, little one. Welcome to my workshop. What brings you here
-    today? "
-  - "And\u2026 what\u2019s your name?"
+  - "\u1ED2\u2014ch\xE0o nh\xF3c. Ch\xE0o m\u1EEBng \u0111\u1EBFn x\u01B0\u1EDFng
+    c\u1EE7a ta. Ng\u1ECDn gi\xF3 n\xE0o mang nh\xF3c \u0111\u1EBFn n\u01A1i n\xE0y
+    th\u1EBF? V\xE0\u2026 t\xEAn c\u1EE7a nh\xF3c l\xE0 g\xEC?"
+  - "V\xE0\u2026 t\xEAn c\u1EE7a nh\xF3c l\xE0 g\xEC?"

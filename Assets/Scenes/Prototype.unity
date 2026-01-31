@@ -320,7 +320,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.85, y: -425}
+  m_AnchoredPosition: {x: -0.85, y: 298}
   m_SizeDelta: {x: 1.7, y: 1.48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &154374201
@@ -2680,6 +2680,7 @@ MonoBehaviour:
   - {fileID: 1471665556}
   - {fileID: 1490964701}
   levelManager: {fileID: 2086097733}
+  backGroundGameUI: {fileID: 1520949785}
 --- !u!1 &1956343352
 GameObject:
   m_ObjectHideFlags: 0

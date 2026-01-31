@@ -13,6 +13,8 @@ public class GameFlowManager : MonoBehaviour
     [Header("System References")]
     public LevelManager levelManager;
 
+    public GameObject backGroundGameUI;
+
     void Start()
     {
         // Tắt visual ban đầu
@@ -44,41 +46,46 @@ public class GameFlowManager : MonoBehaviour
         // --- PHẦN 2: CÁC NPC KHÁC (Giữ nguyên) ---
         foreach (var npc in npcList)
         {
-            // 1. Hiện NPC & Thoại
+            // 1. Hiện NPC
             npc.SetVisualActive(true);
             
+            // 2. LOGIC MỚI: Hiện luôn mặt nạ ở trạng thái VỠ ngay từ đầu
+            if (npc.maskObject != null)
+            {
+                npc.InitializeMask(); 
+                npc.maskObject.gameObject.SetActive(true);
+                
+                // ÉP MẶT NẠ HIỆN SPRITE VỠ NGAY LẬP TỨC
+                // Giả sử bạn đã có hàm SetupMask trong MaskObject, 
+                // ta sẽ gán thẳng sprite vỡ vào renderer.
+                npc.maskObject.spriteRenderer.sprite = npc.maskBrokenSprite;
+            }
+
+            // 3. Chạy hội thoại của NPC
             bool dialogueDone = false;
             npc.StartMyDialogue(() => dialogueDone = true);
             yield return new WaitUntil(() => dialogueDone);
 
-            // 2. Hiện Mask -> Chờ phá
-            if (npc.maskObject != null)
-            {
-                npc.InitializeMask(); // Nạp ảnh mask của NPC này
-                npc.maskObject.gameObject.SetActive(true);
-                npc.maskObject.EnableInteraction();
-                
-                bool maskBroken = true;
-                System.Action onBroken = null;
-                onBroken = () => { maskBroken = false; npc.maskObject.OnMaskBroken -= onBroken; };
-                npc.maskObject.OnMaskBroken += onBroken;
-
-                yield return new WaitUntil(() => maskBroken);
-                npc.maskObject.gameObject.SetActive(false);
-            }
-
-            // 3. Chơi Game Nhạc
+            // 4. Chơi Game Nhạc (Mặt nạ vỡ vẫn nằm đó làm nền hoặc tùy bạn ẩn/hiện)
             if (npc.levelData != null)
             {
+                npc.maskObject.gameObject.SetActive(false);
+                backGroundGameUI.SetActive(true);
                 levelManager.StartLevel(npc.levelData);
                 yield return new WaitUntil(() => levelManager.IsGameFinished);
             }
 
-            // 4. Kết thúc lượt
+            // 5. LOGIC MỚI: KHI THẮNG GAME -> HIỆN MẶT NẠ LÀNH
             if (npc.maskObject != null)
             {
-                npc.maskObject.HealMask();
-                yield return new WaitForSeconds(1f);
+                // Gọi hàm HealMask để đổi về Sprite lành
+                npc.maskObject.HealMask(); 
+                Debug.Log("Game Win! Mặt nạ đã lành lại.");
+                
+                yield return new WaitForSeconds(2.0f); // Chờ người chơi nhìn thấy mặt nạ lành
+                
+                // Tắt các UI game và mặt nạ để sang NPC tiếp theo
+                backGroundGameUI.SetActive(false);
                 npc.maskObject.gameObject.SetActive(false);
             }
             
