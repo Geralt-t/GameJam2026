@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // Cần thư viện này để dùng Slider
+using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 
@@ -11,53 +11,42 @@ public class LevelManager : MonoBehaviour
     public Slider progressSlider; 
     public TextMeshProUGUI timerText; 
 
-    [Header("Data")]
+    [Header("Data Source")]
     public LevelPlaylist playlist;
-    public float screenPadding = 1.0f;
+
+    [Header("Spawn Settings")]
+    [Range(0.1f, 1.0f)] public float spawnAreaScale = 0.5f; // Hệ số vùng spawn (0.5 = 50%)
+    public float screenPadding = 0.5f; 
 
     private LevelData _currentLevelData;
     private int _currentLevelIndex = 0;
-    
     private float _levelTimer = 0f;
     private float _currentProgress = 0f; 
-    
     private float _nextSpawnTimer = 0f;
-    private Vector2 _lastNotePosition = Vector2.zero;
+    private Vector2 _lastNotePosition = Vector2.zero; 
     private int _currentKeyIndex = 0;
     private readonly KeyCode[] _sequenceKeys = { KeyCode.Q, KeyCode.W, KeyCode.E };
 
-    void Awake()
-    {
-        Instance = this;
-    }
+    void Awake() => Instance = this;
 
     void Start()
     {
-        if (playlist != null && playlist.levels.Count > 0)
-        {
-            LoadLevel(0);
-        }
+        if (playlist != null && playlist.levels.Count > 0) LoadLevel(0);
     }
 
     void Update()
     {
         if (_currentLevelData == null) return;
 
-        // 1. Cập nhật Timer
         _levelTimer -= Time.deltaTime;
-
-        // Cập nhật UI Timer (nếu có)
         if (timerText != null) timerText.text = Mathf.CeilToInt(_levelTimer).ToString();
 
-        // 2. Kiểm tra điều kiện THUA (Hết giờ mà chưa đủ 100%)
         if (_levelTimer <= 0)
         {
-            Debug.Log("Hết giờ! Chưa đủ điểm -> Chơi lại!");
             RestartLevel();
             return;
         }
 
-        // 3. Logic Spawn nốt (như cũ)
         _nextSpawnTimer -= Time.deltaTime;
         if (_nextSpawnTimer <= 0)
         {
@@ -66,60 +55,35 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    // --- HÀM NÀY ĐƯỢC GỌI TỪ HITOBJECT KHI BẤM TRÚNG ---
     public void AddProgress()
     {
-        // Cộng % tiến độ
         _currentProgress += _currentLevelData.progressPerHit;
-        
-        // Cập nhật thanh Slider (Slider trong Unity chạy từ 0 đến 1)
-        if (progressSlider != null)
-        {
-            progressSlider.value = _currentProgress / 100f;
-        }
-
-        // Kiểm tra điều kiện THẮNG (Đủ 100%)
-        if (_currentProgress >= 100f)
-        {
-            Debug.Log("Level Complete!");
-            LoadNextLevel();
-        }
+        if (progressSlider != null) progressSlider.value = _currentProgress / 100f;
+        if (_currentProgress >= 100f) LoadNextLevel();
     }
 
-    private void RestartLevel()
-    {
-        // Load lại chính level hiện tại
-        LoadLevel(_currentLevelIndex);
-    }
+    private void RestartLevel() => LoadLevel(_currentLevelIndex);
 
     private void LoadNextLevel()
     {
-        _currentLevelIndex++;
-        if (_currentLevelIndex >= playlist.levels.Count)
-        {
-            _currentLevelIndex = 0; // Loop game
-            Debug.Log("Game Win! Loop lại từ đầu.");
-        }
+        _currentLevelIndex = (_currentLevelIndex + 1) % playlist.levels.Count;
         LoadLevel(_currentLevelIndex);
     }
 
     private void LoadLevel(int index)
     {
+        // Xóa các nốt cũ trên màn hình khi chuyển level hoặc restart
+        HitObject[] activeNotes = FindObjectsOfType<HitObject>();
+        foreach (var note in activeNotes) Destroy(note.gameObject);
+
         _currentLevelData = playlist.levels[index];
         _currentLevelIndex = index;
-
-        // Reset các thông số
         _levelTimer = _currentLevelData.levelDuration;
         _currentProgress = 0f;
-        _lastNotePosition = Vector2.zero;
-        
-        // Reset UI
+        _lastNotePosition = Vector2.zero; 
         if (progressSlider != null) progressSlider.value = 0f;
-
-        Debug.Log($"Load Level: {_currentLevelData.levelName} | Mục tiêu: 100% trong {_levelTimer}s");
     }
 
-    // ... (Giữ nguyên các hàm SpawnNote, GetRelativeRandomPosition, ClampToCameraView cũ của bạn ở dưới)
     private void SpawnNote()
     {
         Vector2 rawPos = GetRelativeRandomPosition();
@@ -131,11 +95,9 @@ public class LevelManager : MonoBehaviour
         KeyCode targetKey = _sequenceKeys[_currentKeyIndex];
         _currentKeyIndex = (_currentKeyIndex + 1) % _sequenceKeys.Length;
 
-        float randomApproach = Random.Range(_currentLevelData.minApproachTime, _currentLevelData.maxApproachTime);
-
         HitObjectData data = new HitObjectData {
             hitKey = targetKey,
-            hitTime = randomApproach,
+            hitTime = Random.Range(_currentLevelData.minApproachTime, _currentLevelData.maxApproachTime),
             position = finalPos
         };
 
@@ -145,17 +107,10 @@ public class LevelManager : MonoBehaviour
         _lastNotePosition = finalPos;
     }
     
-    private KeyCode GetNextKeyInSequence()
-    {
-        KeyCode key = _sequenceKeys[_currentKeyIndex];
-        _currentKeyIndex = (_currentKeyIndex + 1) % _sequenceKeys.Length;
-        return key;
-    }
-
     private Vector2 GetRelativeRandomPosition()
     {
         if (_lastNotePosition == Vector2.zero) 
-             _lastNotePosition = (Vector2)Camera.main.transform.position;
+            _lastNotePosition = (Vector2)Camera.main.transform.position;
 
         float randomAngle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle));
@@ -164,15 +119,28 @@ public class LevelManager : MonoBehaviour
         return _lastNotePosition + (direction * distance);
     }
 
+    // --- SỬA ĐỔI CHÍNH TẠI ĐÂY ---
     private Vector2 ClampToCameraView(Vector2 targetPos)
     {
         Camera cam = Camera.main;
-        float camHeight = cam.orthographicSize;
-        float camWidth = camHeight * cam.aspect;
-        float minX = cam.transform.position.x - camWidth + screenPadding;
-        float maxX = cam.transform.position.x + camWidth - screenPadding;
-        float minY = cam.transform.position.y - camHeight + screenPadding;
-        float maxY = cam.transform.position.y + camHeight - screenPadding;
-        return new Vector2(Mathf.Clamp(targetPos.x, minX, maxX), Mathf.Clamp(targetPos.y, minY, maxY));
+        
+        // Lấy kích thước thực tế của Camera
+        float fullHeight = cam.orthographicSize;
+        float fullWidth = fullHeight * cam.aspect;
+
+        // Tính toán vùng spawn dựa trên tỉ lệ (spawnAreaScale = 0.5f)
+        float spawnHeight = fullHeight * spawnAreaScale;
+        float spawnWidth = fullWidth * spawnAreaScale;
+
+        // Giới hạn nốt trong vùng trung tâm
+        float minX = cam.transform.position.x - spawnWidth + screenPadding;
+        float maxX = cam.transform.position.x + spawnWidth - screenPadding;
+        float minY = cam.transform.position.y - spawnHeight + screenPadding;
+        float maxY = cam.transform.position.y + spawnHeight - screenPadding;
+
+        return new Vector2(
+            Mathf.Clamp(targetPos.x, minX, maxX),
+            Mathf.Clamp(targetPos.y, minY, maxY)
+        );
     }
 }
