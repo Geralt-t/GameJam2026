@@ -12,9 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3149552f94c728449cfdfa696be5d39, type: 3}
   m_Name: DialogueBoss
   m_EditorClassIdentifier: 
-  NPCName: "Ch\u1EE7 ti\u1EC7m s\u1EEDa m\u1EB7t n\u1EA1"
+  NPCName: 
   dialogueLines:
-  - "\u1ED2\u2014ch\xE0o nh\xF3c. Ch\xE0o m\u1EEBng \u0111\u1EBFn x\u01B0\u1EDFng
-    c\u1EE7a ta. Ng\u1ECDn gi\xF3 n\xE0o mang nh\xF3c \u0111\u1EBFn n\u01A1i n\xE0y
-    th\u1EBF?"
-  - "V\xE0\u2026 t\xEAn c\u1EE7a nh\xF3c l\xE0 g\xEC?"
+  - "H\xF4m nay tr\u1EDDi th\u1EADt \u0111\u1EB9p.\r\n\r\n"
+  - "C\u0169ng gi\u1ED1ng nh\u01B0 m\u1ECDi ng\xE0y, nh\u1EC9?"
+  - "B\u1EA1n t\u1EF1 h\u1ECFi th\u1EDDi gian \u0111\xE3 tr\xF4i qua bao l\xE2u,
+    v\xE0 r\u1EB1ng li\u1EC7u n\xF3 c\xF3 \u0111\xE1ng \u0111\u1EC3 ti\u1EBFp t\u1EE5c
+    nh\u01B0 th\u1EBF n\xE0y hay kh\xF4ng?\r\n"
+  - "C\u1EEDa h\xE0ng s\u1EEDa m\u1EB7t n\u1EA1 c\u1EE7a b\u1EA1n, n\u01A1i t\u1EEBng
+    r\u1EA5t \u0111\xF4ng \u0111\xFAc v\xE0 n\u1ED5i ti\u1EBFng, \u0111\xE3 d\u1EA7n
+    b\u1ECB l\xE3ng qu\xEAn b\u1EDFi m\u1ECDi ng\u01B0\u1EDDi\r\n"
+  - "\rK\u1EC3 c\u1EA3\u2026 b\u1EA3n th\xE2n b\u1EA1n.\r\n"
+  - "\rNh\u01B0ng!\r\n"
+  - "B\u1EA1n c\xF3 r\u1EA5t nhi\u1EC1u kh\xE1ch h\xE0ng, v\xE0 h\u01A1n c\u1EA3,
+    \u0111\xE2y kh\xF4ng ph\u1EA3i l\u1EA7n \u0111\u1EA7u ti\xEAn b\u1EA1n g\u1EB7p
+    h\u1ECD!"
+  - "C\xF2n ch\u1EDD g\xEC n\u1EEFa, c\xF9ng s\u1EEDa m\u1EB7t n\u1EA1 th\xF4i ch\u1EE9?"

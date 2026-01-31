@@ -17,9 +17,9 @@ MonoBehaviour:
   levelDuration: 50
   progressPerHit: 10
   minSpawnDelay: 1
-  maxSpawnDelay: 1.5
-  minApproachTime: 0.5
-  maxApproachTime: 1
+  maxSpawnDelay: 1.3
+  minApproachTime: 0.3
+  maxApproachTime: 0.7
   hitWindow: 0.12
   minStepDistance: 1
   maxStepDistance: 3
