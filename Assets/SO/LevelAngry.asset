@@ -15,10 +15,11 @@ MonoBehaviour:
   levelName: LevelAngry
   notePrefab: {fileID: 7625429032603459277, guid: 7e43e50da53116e49b23063a7e69f3af, type: 3}
   levelDuration: 10
-  minSpawnDelay: 0.5
-  maxSpawnDelay: 1.2
+  progressPerHit: 10
+  minSpawnDelay: 1
+  maxSpawnDelay: 1.5
   minApproachTime: 0.5
-  maxApproachTime: 2
+  maxApproachTime: 1
+  hitWindow: 0.15
   minStepDistance: 2
   maxStepDistance: 5
-  hitWindow: 0.15
