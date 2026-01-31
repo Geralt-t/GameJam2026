@@ -104,7 +104,6 @@ public class GameFlowManager : MonoBehaviour
             timerText.SetActive(true);
             if (npc.levelData != null)
             {
-                if(npc.maskObject != null) npc.maskObject.gameObject.SetActive(false);
 
                 
                 levelManager.StartLevel(npc.levelData);

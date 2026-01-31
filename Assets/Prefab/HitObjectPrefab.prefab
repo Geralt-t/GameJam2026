@@ -273,6 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3177126904748203411}
   - component: {fileID: 2523738574610811110}
+  - component: {fileID: 7839076173086862638}
   m_Layer: 0
   m_Name: HitObjectPrefab
   m_TagString: Untagged
@@ -316,6 +317,18 @@ MonoBehaviour:
   keyText: {fileID: 4496761659676954481}
   startScale: 3
   endScale: 1
+--- !u!210 &7839076173086862638
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7625429032603459277}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 20
+  m_SortAtRoot: 0
 --- !u!1 &8605282135394658205
 GameObject:
   m_ObjectHideFlags: 0
