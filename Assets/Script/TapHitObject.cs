@@ -37,7 +37,7 @@ public class TapHitObject : HitObject
         // Nếu vào vùng hitWindow -> Màu xanh
         if (Mathf.Abs(timeRemaining) <= hitWindow)
         {
-            if (circleSprite != null) circleSprite.color = Color.green;
+            if (circleSprite != null) circleSprite.color = Color.mediumSeaGreen;
         }
     }
 
@@ -61,7 +61,7 @@ public class TapHitObject : HitObject
                 Debug.Log("Too Early! Missed.");
                 
                 // Đổi màu đỏ cho người chơi biết là sai
-                if (circleSprite != null) circleSprite.color = Color.red;
+                if (circleSprite != null) circleSprite.color = Color.softRed;
                 
                 OnFail();
             }
