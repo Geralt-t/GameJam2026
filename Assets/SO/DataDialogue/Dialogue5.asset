@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3149552f94c728449cfdfa696be5d39, type: 3}
-  m_Name: DialogueNPC1
+  m_Name: Dialogue5
   m_EditorClassIdentifier: 
-  NPCId: 
-  dialogueLines: []
+  NPCName: 
+  dialogueLines:
+  - 4134134
+  - 4134134

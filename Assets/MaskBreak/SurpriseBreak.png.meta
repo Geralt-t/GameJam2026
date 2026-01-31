@@ -1,16 +1,13 @@
 fileFormatVersion: 2
-guid: 836d73b4c7582e746b40493ce9200858
+guid: 24ec7f0bea11ae4479b14441020b527a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -628212429761895806
-    second: SadnessBreak_0
+      213: 794639132148688780
+    second: SurpriseBreak_0
   - first:
-      213: -8475030393644084260
-    second: SadnessBreak_1
-  - first:
-      213: 8834116050344113253
-    second: SadnessBreak_2
+      213: 661501219800397221
+    second: SurpriseBreak_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -119,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SadnessBreak_0
+      name: SurpriseBreak_0
       rect:
         serializedVersion: 2
-        x: 161
-        y: 64
-        width: 553
-        height: 546
+        x: 602
+        y: 185
+        width: 559
+        height: 700
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,20 +131,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 282ae80af142847f0800000000000000
-      internalID: -628212429761895806
+      spriteID: c87e85c9410270b00800000000000000
+      internalID: 794639132148688780
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SadnessBreak_1
+      name: SurpriseBreak_1
       rect:
         serializedVersion: 2
-        x: 191
-        y: 555
-        width: 251
-        height: 190
+        x: 944
+        y: 449
+        width: 267
+        height: 394
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,30 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cd3943672c4a26a80800000000000000
-      internalID: -8475030393644084260
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SadnessBreak_2
-      rect:
-        serializedVersion: 2
-        x: 436
-        y: 520
-        width: 272
-        height: 232
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 564765d1eb5199a70800000000000000
-      internalID: 8834116050344113253
+      spriteID: 5a5b0b8cadf1e2900800000000000000
+      internalID: 661501219800397221
       vertices: []
       indices: 
       edges: []
@@ -198,9 +173,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SadnessBreak_0: -628212429761895806
-      SadnessBreak_1: -8475030393644084260
-      SadnessBreak_2: 8834116050344113253
+      SurpriseBreak_0: 794639132148688780
+      SurpriseBreak_1: 661501219800397221
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -3,54 +3,45 @@ using UnityEngine;
 public class NPCController : MonoBehaviour
 {
     [Header("NPC Specific Data")]
-    // Dữ liệu hội thoại riêng của NPC này (ScriptableObject)
     public DialogueData npcDialogue; 
-    
-    // Dữ liệu màn chơi Rhythm Game riêng của NPC này
     public LevelData levelData;
 
+    [Header("Mask Visuals")]
+    // KÉO ẢNH MẶT NẠ CỦA NPC NÀY VÀO ĐÂY
+    public Sprite maskWholeSprite;  
+    public Sprite maskBrokenSprite; 
+
     [Header("Scene References")]
-    // Tham chiếu đến MaskObject trong Scene (nếu mỗi NPC dùng chung 1 mask thì kéo mask đó vào, nếu riêng thì kéo mask riêng)
     public MaskObject maskObject;
-    
-    // Tham chiếu đến DialogueController trong Scene
     public DialogueController dialogueController;
+    public GameObject npcVisuals;
 
-    [Header("Visuals")]
-    public GameObject npcVisuals; // Sprite hoặc Model của NPC
+    // Hàm cài đặt Mask trước khi hiện lên
+    public void InitializeMask()
+    {
+        if (maskObject != null && maskWholeSprite != null)
+        {
+            // Nạp ảnh của NPC này vào MaskObject chung trong Scene
+            maskObject.SetupMask(maskWholeSprite, maskBrokenSprite);
+        }
+    }
 
-    // --- CÁC HÀM HỖ TRỢ ĐỂ MANAGER GỌI DỄ DÀNG ---
-
-    // 1. Hàm bắt đầu hội thoại của chính NPC này
     public void StartMyDialogue(System.Action onDialogueFinished)
     {
         if (dialogueController != null && npcDialogue != null)
         {
-            // Gán sự kiện callback
             dialogueController.OnDialogueFinished = onDialogueFinished;
-            
-            // --- SỬA DÒNG NÀY ---
-            // Truyền npcDialogue vào trong hàm StartDialogue
             dialogueController.StartDialogue(npcDialogue); 
-            // --------------------
         }
         else
         {
-            Debug.LogWarning($"NPC {name} thiếu dữ liệu hoặc controller!");
             onDialogueFinished?.Invoke();
         }
     }
 
-    // 2. Hàm bật/tắt hiển thị NPC
     public void SetVisualActive(bool isActive)
     {
-        if (npcVisuals != null)
-        {
-            npcVisuals.SetActive(isActive);
-        }
-        else
-        {
-            gameObject.SetActive(isActive);
-        }
+        if (npcVisuals != null) npcVisuals.SetActive(isActive);
+        else gameObject.SetActive(isActive);
     }
 }

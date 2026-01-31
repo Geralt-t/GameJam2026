@@ -2,67 +2,87 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-// Trong GameFlowManager.cs
 public class GameFlowManager : MonoBehaviour
 {
-    // Chỉ cần 1 list này là đủ (thay vì list NPC riêng, list DialogueData riêng)
-    public List<NPCController> npcList; 
+    [Header("Boss Settings")]
+    public BossNPCController bossController; 
+
+    [Header("NPC List")]
+    public List<NPCController> npcList; // Các NPC thường vẫn dùng script cũ
     
+    [Header("System References")]
     public LevelManager levelManager;
 
     void Start()
     {
+        // Tắt visual ban đầu
+        if (bossController != null) bossController.SetVisualActive(false);
+        foreach (var npc in npcList) npc.SetVisualActive(false);
+
         StartCoroutine(MainGameLoop());
     }
 
-    System.Collections.IEnumerator MainGameLoop()
+    IEnumerator MainGameLoop()
     {
+        // --- PHẦN 1: ÔNG CHỦ ---
+        if (bossController != null)
+        {
+            Debug.Log("Ông chủ xuất hiện...");
+            bossController.SetVisualActive(true);
+
+            bool bossDone = false;
+            
+            // Gọi hàm bên script mới
+            bossController.StartBossDialogue(() => bossDone = true);
+            
+            yield return new WaitUntil(() => bossDone);
+
+            bossController.SetVisualActive(false);
+            yield return new WaitForSeconds(1.0f);
+        }
+
+        // --- PHẦN 2: CÁC NPC KHÁC (Giữ nguyên) ---
         foreach (var npc in npcList)
         {
-            // 1. Hiện NPC
+            // 1. Hiện NPC & Thoại
             npc.SetVisualActive(true);
-
-            // 2. Chạy hội thoại (Gọi thẳng vào hàm của NPCController)
+            
             bool dialogueDone = false;
             npc.StartMyDialogue(() => dialogueDone = true);
             yield return new WaitUntil(() => dialogueDone);
 
-            // 3. Xử lý Mask (Lấy tham chiếu Mask từ chính NPC đó)
+            // 2. Hiện Mask -> Chờ phá
             if (npc.maskObject != null)
             {
+                npc.InitializeMask(); // Nạp ảnh mask của NPC này
                 npc.maskObject.gameObject.SetActive(true);
                 npc.maskObject.EnableInteraction();
                 
-                bool maskBroken = false;
+                bool maskBroken = true;
                 System.Action onBroken = null;
-                onBroken = () => { maskBroken = true; npc.maskObject.OnMaskBroken -= onBroken; };
+                onBroken = () => { maskBroken = false; npc.maskObject.OnMaskBroken -= onBroken; };
                 npc.maskObject.OnMaskBroken += onBroken;
 
                 yield return new WaitUntil(() => maskBroken);
+                npc.maskObject.gameObject.SetActive(false);
             }
 
-            // Trong GameFlowManager.cs -> MainGameLoop()
-
-// 4. Chạy Game Level
+            // 3. Chơi Game Nhạc
             if (npc.levelData != null)
             {
-                // Gọi hàm mới vừa viết
                 levelManager.StartLevel(npc.levelData);
+                yield return new WaitUntil(() => levelManager.IsGameFinished);
             }
-            else
+
+            // 4. Kết thúc lượt
+            if (npc.maskObject != null)
             {
-                Debug.LogWarning($"NPC {npc.name} chưa được gán LevelData!");
-                // Nếu quên gán Data thì phải skip qua bước đợi game, nếu không sẽ bị kẹt vĩnh viễn
-                // levelManager.ForceFinish(); // (Tùy chọn: viết thêm hàm này nếu cần)
+                npc.maskObject.HealMask();
+                yield return new WaitForSeconds(1f);
+                npc.maskObject.gameObject.SetActive(false);
             }
-
-// Chờ game xong... (LevelManager sẽ set IsGameFinished = true khi hết giờ hoặc đủ điểm)
-            yield return new WaitUntil(() => levelManager.IsGameFinished);
-
-            // 5. Kết thúc lượt
-            if (npc.maskObject != null) npc.maskObject.HealMask();
-            npc.SetVisualActive(false);
             
+            npc.SetVisualActive(false);
             yield return new WaitForSeconds(1f);
         }
     }

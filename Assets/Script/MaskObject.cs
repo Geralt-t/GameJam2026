@@ -3,49 +3,52 @@ using System;
 
 public class MaskObject : MonoBehaviour
 {
-    public Sprite maskWhole;  // Ảnh mặt nạ nguyên
-    public Sprite maskBroken; // Ảnh mặt nạ vỡ
     public SpriteRenderer spriteRenderer;
 
-    // Sự kiện để báo cho Manager biết là đã bị chạm
-    public event Action OnMaskBroken; 
+    // Biến lưu trữ sprite tạm thời của NPC hiện tại
+    private Sprite _currentWholeSprite;
+    private Sprite _currentBrokenSprite;
 
-    private bool _isInteractable = false;
+    public event Action OnMaskBroken;
+    private bool _canInteract = false;
 
-    void Start()
+    // --- HÀM MỚI: ĐỂ NPC NẠP DỮ LIỆU VÀO ---
+    public void SetupMask(Sprite whole, Sprite broken)
     {
-        spriteRenderer.sprite = maskWhole; // Ban đầu là nguyên
-    }
+        _currentWholeSprite = whole;
+        _currentBrokenSprite = broken;
 
-    // Hàm này được Manager gọi để cho phép người chơi bấm
+        // Mặc định ban đầu là hiển thị mặt nạ nguyên
+        spriteRenderer.sprite = _currentWholeSprite;
+    }
+    // ---------------------------------------
+
     public void EnableInteraction()
     {
-        _isInteractable = true;
-        // Có thể thêm hiệu ứng phát sáng ở đây để gợi ý người chơi bấm
-    }
-
-    void OnMouseDown() // Xử lý khi click chuột hoặc chạm vào Collider 2D
-    {
-        if (_isInteractable)
-        {
-            BreakMask();
-        }
-    }
-
-    void BreakMask()
-    {
-        _isInteractable = false;
-        spriteRenderer.sprite = maskBroken; // Đổi sang ảnh vỡ
-        
-        // Báo hiệu ra ngoài
-        OnMaskBroken?.Invoke();
-        
-        // Hiệu ứng âm thanh vỡ kính ở đây (nếu có)
+        _canInteract = true;
     }
 
     public void HealMask()
     {
-        spriteRenderer.sprite = maskWhole; // Quay lại ảnh nguyên
-        // Hiệu ứng phép thuật hồi phục ở đây
+        // Hồi phục lại dùng sprite nguyên vẹn hiện tại
+        spriteRenderer.sprite = _currentWholeSprite;
+        gameObject.SetActive(true);
+    }
+
+    void OnMouseDown()
+    {
+        if (_canInteract)
+        {
+            _canInteract = false;
+            
+            // Đổi sang sprite vỡ hiện tại
+            if (_currentBrokenSprite != null)
+                spriteRenderer.sprite = _currentBrokenSprite;
+            
+            OnMaskBroken?.Invoke();
+
+            // Ẩn mask sau 0.5s hoặc ẩn ngay tùy bạn
+            // gameObject.SetActive(false); 
+        }
     }
 }
