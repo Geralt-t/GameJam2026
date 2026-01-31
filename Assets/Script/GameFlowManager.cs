@@ -17,6 +17,7 @@ public class GameFlowManager : MonoBehaviour
 
     void Start()
     {
+        AudioManager.Instance.PlayMusic("default");
         // Tắt visual ban đầu
         if (bossController != null) bossController.SetVisualActive(false);
         foreach (var npc in npcList) npc.SetVisualActive(false);

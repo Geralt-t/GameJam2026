@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3149552f94c728449cfdfa696be5d39, type: 3}
   m_Name: Dialogue4
   m_EditorClassIdentifier: 
-  NPCName: "C\xF4 g\xE1i gi\u1EADn d\u1EEF"
+  NPCName: "Anh ch\xE0ng s\u1EE3 s\u1EC7t"
   dialogueLines:
-  - "T\u1EA1i sao g\u1EA7n \u0111\xE2y kh\xF4ng c\xF3 c\u1EEDa h\xE0ng n\xE0o s\u1EEDa
-    m\u1EB7t n\u1EA1 h\u1EBFt v\u1EADy?N\xF3 m\u1EA5t t\xF4i m\u1EA5y ti\u1EBFng
-    \u0111\u1ED3ng h\u1ED3 \u0111\u1EC3 t\xECm \u0111\u01B0\u1EE3c n\u01A1i n\xE0y!"
-  - "N\xE0y \xF4ng ch\u1EE7!C\xF3 th\u1EC3 s\u1EEDa nhanh chi\u1EBFc m\u1EB7t n\u1EA1
-    n\xE0y gi\xFAp t\xF4i \u0111\u01B0\u1EE3c kh\xF4ng?T\xF4i \u0111ang c\u1EA7n
-    g\u1EA5p!"
+  - "Sau khi c\xF4 b\xE9 r\u1EDDi \u0111i, m\u1ED9t anh ch\xE0ng v\u1EDBi chi\u1EBFc
+    m\u1EB7t n\u1EA1 bi\u1EC3u tr\u01B0ng c\u1EA3m x\xFAc - Ho\u1EA3ng S\u1EE3, ti\u1EBFn
+    v\xE0o, khu\xF4n m\u1EB7t l\u1EA5m l\xE9t nh\u01B0 th\u1EC3 v\u1EEBa ph\u1EA1m
+    ph\u1EA3i sai l\u1EA7m g\xEC \u0111\xF3 \u0111\xE1ng s\u1EE3...."
+  - "T\xF4i kh\xF4ng c\xF3 th\u1EDDi gian.... H-h\xE3y gi\xFAp t\xF4i s\u1EEDa chi\u1EBFc
+    m\u1EB7t n\u1EA1 Ho\u1EA3ng S\u1EE3 n\xE0y... Ch-Ch\xFAng \u0111ang kh\xF4ng
+    ng\u1EEBng g\xE0o th\xE9t.... T-t\xF4i c\xF3 th\u1EC3 c\u1EA3m th\u1EA5y ch\xFAng
+    \u0111ang \u0111\u1EBFn g\u1EA7n...."
