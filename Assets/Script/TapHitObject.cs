@@ -9,7 +9,7 @@ public class TapHitObject : HitObject
     public TextMeshPro keyText;
 
     [Header("Settings")]
-    public float startScale = 3f;
+    public float startScale = 2f;
     public float endScale = 1f;
 
     public override void Initialize(HitObjectData data)
@@ -19,7 +19,6 @@ public class TapHitObject : HitObject
         // Setup hiển thị ban đầu
         if (keyText != null) keyText.text = _data.hitKey.ToString();
         if (approachCircle != null) approachCircle.localScale = Vector3.one * startScale;
-        if (circleSprite != null) circleSprite.color = Color.white;
     }
 
     protected override void UpdateVisuals()
