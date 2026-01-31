@@ -6,13 +6,14 @@ using System;
 public class DialogueController : MonoBehaviour
 {
     [Header("UI References")]
-    [SerializeField] private TMP_Text NPCName; // Ô hiển thị tên NPC
+    [SerializeField] private TMP_Text NPCName; 
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private float typingSpeed = 0.03f; 
     
     private DialogueData _currentData; 
     private int currentIndex = 0;
+    private int stopIndex = 0; // BIẾN MỚI: Điểm dừng của hội thoại
     private bool isTyping = false;          
     private bool skipTyping = false;      
     
@@ -35,18 +36,26 @@ public class DialogueController : MonoBehaviour
         }
     }
 
+    // Hàm mặc định: Chạy toàn bộ hội thoại (Dùng cho Boss)
     public void StartDialogue(DialogueData data)
     {
         if (data == null) return;
+        StartDialogueRange(data, 0, data.dialogueLines.Count - 1);
+    }
+
+    // HÀM MỚI: Cho phép chạy hội thoại từ dòng A đến dòng B
+    public void StartDialogueRange(DialogueData data, int startLine, int endLine)
+    {
+        if (data == null || data.dialogueLines.Count == 0) return;
 
         _currentData = data; 
-        currentIndex = 0;
+        currentIndex = startLine;
+        stopIndex = endLine; // Thiết lập điểm dừng
+        
         dialoguePanel.SetActive(true);
 
-        // THÊM: Cập nhật tên NPC ngay khi bắt đầu hội thoại
         if (NPCName != null)
         {
-            // Giả sử trong DialogueData của bạn biến lưu tên là NPCId hoặc NPCName
             NPCName.text = _currentData.NPCName; 
         }
 
@@ -55,7 +64,8 @@ public class DialogueController : MonoBehaviour
 
     private void ShowDialogue()
     {
-        if (_currentData != null && currentIndex < _currentData.dialogueLines.Count)
+        // SỬA ĐIỀU KIỆN: Chỉ chạy nếu currentIndex chưa vượt quá stopIndex
+        if (_currentData != null && currentIndex <= stopIndex && currentIndex < _currentData.dialogueLines.Count)
         {
             if (typingCoroutine != null) StopCoroutine(typingCoroutine);
             typingCoroutine = StartCoroutine(TypeText(_currentData.dialogueLines[currentIndex]));
@@ -102,6 +112,8 @@ public class DialogueController : MonoBehaviour
         if (typingCoroutine != null) StopCoroutine(typingCoroutine);
         dialoguePanel.SetActive(false);
         isTyping = false;
+        
+        // Gọi sự kiện để GameFlowManager biết mà chạy tiếp
         OnDialogueFinished?.Invoke();
     }
 }

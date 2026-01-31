@@ -12,17 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3149552f94c728449cfdfa696be5d39, type: 3}
   m_Name: Dialogue3
   m_EditorClassIdentifier: 
-  NPCName: "\xD4ng ch\xFA v\u1EA1m v\u1EE1"
+  NPCName: ???
   dialogueLines:
-  - "(M\u1ED9t g\xE3 trung ni\xEAn v\u1EDBi th\xE2n h\xECnh v\u1EA1m v\u1EE1 b\u01B0\u1EDBc
-    v\xE0o c\u1EEDa h\xE0ng v\xE0 h\u1ECFi)\r\n\"\xD4ng ch\u1EE7 \u01A1i,c\xF3 th\u1EC3
-    gi\xFAp t\xF4i s\u1EEDa gi\xFAp t\xF4i c\xE1i m\u1EB7t n\u1EA1 c\u0169 k\u0129
-    n\xE0y kh\xF4ng?\""
-  - "N\xF3 \u0111\xE3 g\u1EAFn b\xF3 v\u1EDBi t\xF4i r\u1EA5t nhi\u1EC1u n\u0103m
-    r\u1ED3i \u0111\u1EA5y,\u0111\u1EEBng l\xE0m h\u1ECFng nh\xE9!"
-  - "Trong \xF4ng quen th\u1EBF?Ch\xFAng ta c\xF3 g\u1EB7p qua bao gi\u1EDD ch\u01B0a?Nh\xECn
-    \xF4ng trong r\u1EA5t quen thu\u1ED9c m\xE0 t\xF4i kh\xF4ng th\u1EC3 nh\u1EADn
-    ra l\xE0 ai"
-  - " Xin l\u1ED7i,ch\u1EAFc t\xF4i nh\u1EDB nh\u1EA7m ai \u0111\xF3,t\u1EA1i do
-    t\xEDnh ch\u1EA5t c\xF4ng vi\u1EC7c n\xEAn t\xF4i g\u1EB7p r\u1EA5t nhi\u1EC1u
-    ng\u01B0\u1EDDi..."
+  - "C\u1EADu l\xE0.... "
+  - "T\xF4i ch\xEDnh l\xE0 c\u1EADu, ph\u1EA7n k\xED \u1EE9c c\u1EADu \u0111\xE3
+    \u0111\xE1nh m\u1EA5t.... "
+  - "C\u1EEDa ti\u1EC7m M\u1EB7t N\u1EA1 gi\xFAp c\u1EADu c\xF3 th\u1EC3 s\u1EEDa
+    ch\u1EEFa l\u1EA1i c\xE1c m\u1EB7t n\u1EA1 x\xFAc c\u1EA3m c\u1EE7a nh\u1EEFng
+    ng\u01B0\u1EDDi kh\xE1c, tuy nhi\xEAn d\u1EA7n d\u1EA7n, c\xE1c c\u1EA3m x\xFAc
+    c\u1EE7a b\u1EA3n th\xE2n c\u1EADu \u0111\u1EC1u \u1EA3nh h\u01B0\u1EDFng b\u1EDFi
+    ch\xFAng.... "
+  - " H\xE3y s\u1EEDa chi\u1EBFc m\u1EB7t n\u1EA1 n\xE0y - S\u1EF1 Ng\u1EA1c Nhi\xEAn,
+    c\xF3 l\u1EBD ch\xFAng c\xF3 th\u1EC3 gi\xFAp c\u1EADu mang v\u1EC1 nh\u1EEFng
+    c\u1EA3m x\xFAc \u0111\xE3 m\u1EA5t, ng\u1EA1c nhi\xEAn c\xF3 th\u1EC3 mang \u0111\u1EBFn
+    h\u1EA1nh ph\xFAc, c\u0169ng c\xF3 th\u1EC3 l\xE0 bu\u1ED3n b\xE3, ho\u1EB7c
+    t\u1EE9c gi\u1EADn, nh\u01B0ng khi c\u1EADu th\u1EDD \u01A1 v\u1EDBi m\u1ECDi
+    th\u1EE9, c\u1EA3m x\xFAc \u0111\u1EC1u s\u1EBD bi\u1EBFn m\u1EA5t...."

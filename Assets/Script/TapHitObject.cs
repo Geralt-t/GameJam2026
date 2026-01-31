@@ -1,30 +1,70 @@
 using UnityEngine;
+using TMPro;
 
 public class TapHitObject : HitObject
 {
+    [Header("Visual References")]
+    public Transform approachCircle;
+    public SpriteRenderer circleSprite;
+    public TextMeshPro keyText;
+
+    [Header("Settings")]
+    public float startScale = 3f;
+    public float endScale = 1f;
+
+    public override void Initialize(HitObjectData data)
+    {
+        base.Initialize(data);
+
+        // Setup hiển thị ban đầu
+        if (keyText != null) keyText.text = _data.hitKey.ToString();
+        if (approachCircle != null) approachCircle.localScale = Vector3.one * startScale;
+        if (circleSprite != null) circleSprite.color = Color.white;
+    }
+
     protected override void UpdateVisuals()
     {
-        if (approachCircle != null)
+        if (approachCircle == null) return;
+
+        // 1. Tính toán Scale (Lerp từ to -> nhỏ)
+        // _timeAlive và _data được lấy từ class cha
+        float t = _timeAlive / _data.hitTime; 
+        float currentScale = Mathf.Lerp(startScale, endScale, t);
+        approachCircle.localScale = Vector3.one * currentScale;
+
+        // 2. Logic Đổi Màu Xanh (Feedback thị giác)
+        float timeRemaining = _data.hitTime - _timeAlive;
+        
+        // Nếu vào vùng hitWindow -> Màu xanh
+        if (Mathf.Abs(timeRemaining) <= hitWindow)
         {
-            float t = _elapsedTime / _data.hitTime;
-            float scale = Mathf.Lerp(startScale, endScale, Mathf.Clamp01(t));
-            approachCircle.localScale = new Vector3(scale, scale, 1);
+            if (circleSprite != null) circleSprite.color = Color.green;
         }
     }
 
     protected override void CheckInput()
     {
+        // Kiểm tra đúng phím
         if (Input.GetKeyDown(_data.hitKey))
         {
-            float diff = Mathf.Abs(_elapsedTime - _data.hitTime);
-            
+            float timeRemaining = _data.hitTime - _timeAlive;
+            float diff = Mathf.Abs(timeRemaining);
+
             if (diff <= hitWindow)
             {
-                OnResult("Hit! Perfect");
+                // Bấm đúng lúc -> Thắng
+                Debug.Log("Perfect Hit!");
+                OnSuccess();
             }
             else
             {
-                OnResult("Too Early");
+                // Bấm quá sớm -> Thua (Trừ điểm)
+                Debug.Log("Too Early! Missed.");
+                
+                // Đổi màu đỏ cho người chơi biết là sai
+                if (circleSprite != null) circleSprite.color = Color.red;
+                
+                OnFail();
             }
         }
     }

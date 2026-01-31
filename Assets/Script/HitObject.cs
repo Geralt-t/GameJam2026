@@ -1,63 +1,62 @@
-using System;
-using TMPro;
 using UnityEngine;
 
+// Class cha (Abstract) - Quy định luật chơi chung
 public abstract class HitObject : MonoBehaviour
 {
-    [Header("Base References")]
-    public Transform approachCircle;
-    public TMP_Text keyText;
-    public event Action<KeyCode> OnObjectDestroyed;
-
-    [Header("Base Settings")]
-    public float hitWindow = 0.15f;
-    public float startScale = 3.0f;
-    public float endScale = 1.0f;
-
     protected HitObjectData _data;
-    protected float _elapsedTime = 0f;
-    protected bool _isProcessed = false;
+    protected float _startTime;
+    protected bool _hasHit = false;
+
+    // Biến dùng chung để tính toán thời gian
+    protected float _timeAlive => Time.time - _startTime;
+    
+    // Settings
+    public float hitWindow = 0.2f;
 
     public virtual void Initialize(HitObjectData data)
     {
         _data = data;
-        transform.position = new Vector3(data.position.x, data.position.y, 0);
-        if (keyText != null)
-        {
-            keyText.text = data.hitKey.ToString();
-        }
+        _startTime = Time.time;
+        transform.position = _data.position;
     }
 
-    protected virtual void Update()
+    private void Update()
     {
-        if (_isProcessed) return;
+        if (_hasHit) return;
 
-        _elapsedTime += Time.deltaTime;
-
-        UpdateVisuals();
-        CheckInput();
-
-        if (_elapsedTime >= _data.hitTime + hitWindow)
+        // 1. Kiểm tra nếu hết giờ (Miss)
+        if (_timeAlive > _data.hitTime + hitWindow)
         {
-            OnResult("Miss");
+            OnFail(); // Hết giờ mà chưa bấm -> Thua
+            return;
         }
+
+        // 2. Gọi logic hình ảnh (Do lớp con tự viết)
+        UpdateVisuals();
+
+        // 3. Gọi logic nhập liệu (Do lớp con tự viết)
+        CheckInput();
     }
 
+    // Các hàm Abstract bắt buộc lớp con phải có
     protected abstract void UpdateVisuals();
-
     protected abstract void CheckInput();
 
-    protected void OnResult(string msg)
+    // Logic Thắng/Thua
+    protected virtual void OnSuccess()
     {
-        if (_isProcessed) return;
-        _isProcessed = true;
-
-        if (msg.Contains("Hit") && LevelManager.Instance != null)
-        {
-            LevelManager.Instance.AddProgress();
-        }
-        Debug.Log(msg);
-        OnObjectDestroyed?.Invoke(_data.hitKey);
+        _hasHit = true;
+        LevelManager.Instance.AddProgress();
         Destroy(gameObject);
+    }
+
+    protected virtual void OnFail()
+    {
+        _hasHit = true;
+        LevelManager.Instance.SubtractProgress();
+        
+        // Hiệu ứng Fail (đổi màu đỏ...) có thể xử lý ở đây hoặc lớp con
+        // Tạm thời destroy sau 0.1s
+        Destroy(gameObject, 0.1f);
     }
 }

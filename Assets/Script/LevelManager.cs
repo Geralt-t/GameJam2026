@@ -9,51 +9,47 @@ public class LevelManager : MonoBehaviour
     [Header("UI References")]
     public Slider progressSlider;
     public TextMeshProUGUI timerText;
-    
-    // Không cần Playlist bắt buộc nữa, vì Data sẽ được truyền vào
-    // public LevelPlaylist playlist; 
 
     [Header("Spawn Settings")]
     [Range(0.1f, 1.0f)] public float spawnAreaScale = 0.5f;
     public float screenPadding = 0.5f;
 
-    // --- BIẾN QUAN TRỌNG CHO GAMEFLOW MANAGER ---
+    [Header("Game Difficulty")]
+    public bool useRandomKeys = false; // Tích vào đây nếu là Level cuối
+    public float missPenalty = 5f;     // Trừ 5% nếu bấm trượt
+
     public bool IsGameFinished { get; private set; } = false;
-    // --------------------------------------------
 
     private LevelData _currentLevelData;
     private float _levelTimer = 0f;
     private float _currentProgress = 0f;
     private float _nextSpawnTimer = 0f;
     private Vector2 _lastNotePosition = Vector2.zero;
+    
     private int _currentKeyIndex = 0;
-    private readonly KeyCode[] _sequenceKeys = { KeyCode.Q, KeyCode.W, KeyCode.E };
+    // Danh sách phím
+    private readonly KeyCode[] _sequenceKeys = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Space };
 
     void Awake() => Instance = this;
 
-    void Start()
-    {
-        // QUAN TRỌNG: Xóa logic tự động chạy LoadLevel(0) ở đây.
-        // Game sẽ nằm im chờ GameFlowManager gọi lệnh bắt đầu.
-    }
+    void Start() { }
 
     void Update()
     {
-        // Nếu chưa có dữ liệu level hoặc game đã xong thì không làm gì cả
         if (_currentLevelData == null || IsGameFinished) return;
 
-        // 1. Logic Timer
+        // 1. Timer Logic
         _levelTimer -= Time.deltaTime;
-        if (timerText != null) timerText.text = Mathf.CeilToInt(_levelTimer).ToString();
+        if (timerText != null) timerText.text = "Timer: "+Mathf.CeilToInt(_levelTimer).ToString();
 
-        // 2. Kiểm tra điều kiện KẾT THÚC (Hết giờ)
         if (_levelTimer <= 0)
         {
-            StartLevel(_currentLevelData);// Hết giờ -> Xong game (Thắng hay thua tùy logic bạn muốn xử lý thêm)
+            Debug.Log("Time Over");
+            FinishGame(); // Hết giờ thì kết thúc
             return;
         }
 
-        // 3. Logic Spawn Note
+        // 2. Spawn Logic
         _nextSpawnTimer -= Time.deltaTime;
         if (_nextSpawnTimer <= 0)
         {
@@ -62,50 +58,56 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    // --- HÀM MỚI ĐỂ GỌI TỪ GAME FLOW MANAGER ---
     public void StartLevel(LevelData data)
     {
         if (data == null)
         {
-            
-            Debug.LogError("LevelData truyền vào bị null!");
-            // Set luôn là true để GameFlow không bị treo mãi mãi
             IsGameFinished = true; 
             return;
         }
 
         _currentLevelData = data;
         AudioManager.Instance.PlayMusic((_currentLevelData.levelName));
-        // Reset trạng thái game
         IsGameFinished = false;
         _levelTimer = _currentLevelData.levelDuration;
         _currentProgress = 0f;
         _lastNotePosition = Vector2.zero;
         
-        // Reset UI
         if (progressSlider != null) progressSlider.value = 0f;
-
-        // Xóa sạch các nốt nhạc cũ còn sót lại (nếu có)
         ClearAllNotes();
-
-        Debug.Log($"Đã bắt đầu Level: {_currentLevelData.name}");
     }
-    // -------------------------------------------
 
     public void AddProgress()
     {
         if (IsGameFinished) return;
 
         _currentProgress += _currentLevelData.progressPerHit;
+        // Kẹp giá trị không quá 100
+        _currentProgress = Mathf.Clamp(_currentProgress, 0f, 100f);
+        
         if (progressSlider != null) progressSlider.value = _currentProgress / 100f;
 
-        // Kiểm tra điều kiện THẮNG
         if (_currentProgress >= 100f)
         {
             Debug.Log("Level Complete!");
             FinishGame();
         }
     }
+
+    // --- HÀM MỚI: TRỪ ĐIỂM KHI HỤT ---
+    public void SubtractProgress()
+    {
+        if (IsGameFinished) return;
+
+        _currentProgress -= missPenalty; 
+        // Kẹp giá trị không dưới 0
+        _currentProgress = Mathf.Clamp(_currentProgress, 0f, 100f);
+
+        if (progressSlider != null) progressSlider.value = _currentProgress / 100f;
+        
+        Debug.Log("Miss! Process decreased.");
+    }
+    // ---------------------------------
 
     private void FinishGame()
     {
@@ -118,27 +120,33 @@ public class LevelManager : MonoBehaviour
     private void ClearAllNotes()
     {
         HitObject[] activeNotes = FindObjectsOfType<HitObject>();
-        foreach (var note in activeNotes)
-        {
-            Destroy(note.gameObject);
-        }
+        foreach (var note in activeNotes) Destroy(note.gameObject);
     }
 
-    // ... (Giữ nguyên logic SpawnNote và ClampToCameraView cũ của bạn ở dưới) ...
     private void SpawnNote()
     {
         Vector2 rawPos = GetRelativeRandomPosition();
         Vector2 finalPos = ClampToCameraView(rawPos);
 
+        // Instantiate Note
         GameObject go = Instantiate(_currentLevelData.notePrefab, finalPos, Quaternion.identity);
-        
-        // Nếu Note Prefab là UI Image thì cần gán vào Canvas, nếu là Sprite thì kệ
-        // go.transform.SetParent(canvasTransform); // Uncomment nếu cần
-
         HitObject hitObj = go.GetComponent<HitObject>();
 
-        KeyCode targetKey = _sequenceKeys[_currentKeyIndex];
-        _currentKeyIndex = (_currentKeyIndex + 1) % _sequenceKeys.Length;
+        // --- LOGIC RANDOM KEY ---
+        KeyCode targetKey;
+        if (useRandomKeys)
+        {
+            // Level cuối: Chọn ngẫu nhiên trong danh sách phím
+            int randIndex = Random.Range(0, _sequenceKeys.Length);
+            targetKey = _sequenceKeys[randIndex];
+        }
+        else
+        {
+            // Level thường: Theo thứ tự tuần tự
+            targetKey = _sequenceKeys[_currentKeyIndex];
+            _currentKeyIndex = (_currentKeyIndex + 1) % _sequenceKeys.Length;
+        }
+        // ------------------------
 
         HitObjectData data = new HitObjectData {
             hitKey = targetKey,
@@ -152,6 +160,7 @@ public class LevelManager : MonoBehaviour
         _lastNotePosition = finalPos;
     }
     
+    // ... (Giữ nguyên GetRelativeRandomPosition và ClampToCameraView) ...
     private Vector2 GetRelativeRandomPosition()
     {
         if (_lastNotePosition == Vector2.zero) 
