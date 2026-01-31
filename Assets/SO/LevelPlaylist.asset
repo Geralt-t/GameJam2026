@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: LevelPlaylist
   m_EditorClassIdentifier: 
   levels:
+  - {fileID: 11400000, guid: 44480c0f418843c4cb135fe7d254ee17, type: 2}
   - {fileID: 11400000, guid: afea4f73b076ef142b6e92679f7b25db, type: 2}
   - {fileID: 11400000, guid: 07f56b9211bbd85418f29f7f2d975563, type: 2}
   - {fileID: 11400000, guid: 7b72e6f8d0589394fb727c2d78b7fc81, type: 2}
   - {fileID: 11400000, guid: 4ac382a50fbd6574f84f74d6a2ec47f6, type: 2}
   - {fileID: 11400000, guid: 94a2593172838384c8e6e95d8f7c4c74, type: 2}
-  - {fileID: 11400000, guid: 44480c0f418843c4cb135fe7d254ee17, type: 2}

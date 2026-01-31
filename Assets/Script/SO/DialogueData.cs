@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DialogueData", menuName = "ScriptableObject/DialogueData")]
 public class DialogueData : ScriptableObject
 {
-    public string NPCId;
+    public string NPCName;
     [TextArea(3, 10)]
     public List<string> dialogueLines;
 }

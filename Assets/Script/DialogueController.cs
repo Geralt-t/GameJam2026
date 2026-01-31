@@ -1,60 +1,67 @@
 using System.Collections;
 using UnityEngine;
-
 using TMPro;
+using System; 
+
 public class DialogueController : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private DialogueData dialogueData;
-    [SerializeField] private float minWaitTime = 2.0f;
-    [Header("Settings")]
     [SerializeField] private float typingSpeed = 0.03f; 
     
-    private float timerSinceStartedLine = 0f;
+    private DialogueData _currentData; // Biến lưu data được truyền vào
     private int currentIndex = 0;
     private bool isTyping = false;          
     private bool skipTyping = false;      
-    public bool IsDialogueActive { get; private set; }
-    private bool isFinishDialogue=false;
+    
     private Coroutine typingCoroutine;
-    public System.Action OnDialogueFinished;
+    
+    // Action để báo về cho NPCController biết là đã xong
+    public Action OnDialogueFinished; 
 
     private void Start()
     {
         dialoguePanel.SetActive(false);
-        IsDialogueActive = false;
     }
+
     private void Update()
     {
-        if (IsDialogueActive)
+        // Logic bấm chuột để next
+        if (dialoguePanel.activeSelf)
         {
-            timerSinceStartedLine += Time.deltaTime;
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+            {
+                NextDialogue();
+            }
         }
     }
-    public void StartDialogue()
+
+    // --- SỬA ĐỔI CHÍNH TẠI ĐÂY ---
+    // Hàm này bây giờ nhận vào DialogueData
+    public void StartDialogue(DialogueData data)
     {
+        if (data == null)
+        {
+            Debug.LogError("Không có DialogueData được truyền vào!");
+            EndDialogue();
+            return;
+        }
+
+        _currentData = data; // Lưu lại data của NPC hiện tại
         currentIndex = 0;
+        
         dialoguePanel.SetActive(true);
-        IsDialogueActive = true;
         ShowDialogue();
-        isFinishDialogue = false;
     }
+    // -----------------------------
 
     private void ShowDialogue()
     {
-        if (currentIndex < dialogueData.dialogueLines.Count)
+        if (currentIndex < _currentData.dialogueLines.Count)
         {
-            timerSinceStartedLine = 0f;
-            if (typingCoroutine != null)
-                StopCoroutine(typingCoroutine);
-            string voiceClipName = dialogueData.NPCId + currentIndex;
-            // if (AudioManager.Instance != null)
-            // {
-            //     AudioManager.Instance.PlaySFX(voiceClipName, 1f, false);
-            // }
-            typingCoroutine = StartCoroutine(TypeText(dialogueData.dialogueLines[currentIndex]));
+            if (typingCoroutine != null) StopCoroutine(typingCoroutine);
+            typingCoroutine = StartCoroutine(TypeText(_currentData.dialogueLines[currentIndex]));
         }
         else
         {
@@ -72,62 +79,34 @@ public class DialogueController : MonoBehaviour
         {
             if (skipTyping)
             {
-                dialogueText.text = line; // hi?n th? h?t lu�n
+                dialogueText.text = line;
                 break;
             }
-
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
-
         isTyping = false;
     }
 
     public void NextDialogue()
     {
-        if (timerSinceStartedLine < minWaitTime)
-        {
-            return;
-        }
         if (isTyping)
         {
             skipTyping = true;
-            string voiceClipName = dialogueData.NPCId + currentIndex;
-            // if (AudioManager.Instance != null)
-            // {
-            //     AudioManager.Instance.StopSFX(voiceClipName);
-            // }
             return;
         }
-
         currentIndex++;
         ShowDialogue();
     }
 
     public void EndDialogue()
     {
-        if (typingCoroutine != null)
-            StopCoroutine(typingCoroutine);
-        string voiceClipName = dialogueData.NPCId + (currentIndex - 1);;
-        // if (AudioManager.Instance != null)
-        // {
-        //     AudioManager.Instance.StopSFX(voiceClipName);
-        // }
+        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
+        
         dialoguePanel.SetActive(false);
-        IsDialogueActive = false;
-        currentIndex = 0;
         isTyping = false;
-        skipTyping = false;
-        isFinishDialogue = true;
+        
+        // Gọi Action để báo cho NPCController biết
         OnDialogueFinished?.Invoke();
-
-    }
-    public bool isFinishedDialogue()
-    {
-        if (isFinishDialogue)
-        {
-            return true;
-        }
-        return false;
     }
 }
