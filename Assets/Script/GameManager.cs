@@ -17,10 +17,10 @@ public class GameManager : MonoBehaviour
         _activeLanes[KeyCode.E] = false;
         _activeLanes[KeyCode.R] = false;
 
-        AddNote(KeyCode.Q, 5.0f, new Vector2(-2,0));
-        AddNote(KeyCode.W, 2.0f, new Vector2(-4,0));
-        AddNote(KeyCode.Q, 2.0f, new Vector2(-2,2));
-        AddNote(KeyCode.E, 2.0f, new Vector2(1,2));
+        AddNote(KeyCode.Q, 2.0f, new Vector2(-2,0));
+        AddNote(KeyCode.W, 1.0f, new Vector2(-4,0));
+        AddNote(KeyCode.Q, 1.0f, new Vector2(-2,2));
+        AddNote(KeyCode.E, 1.0f, new Vector2(1,2));
     }
 
     private void AddNote(KeyCode key, float duration, Vector2 pos)

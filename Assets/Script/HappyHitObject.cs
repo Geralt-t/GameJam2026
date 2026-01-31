@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TapHitObject : HitObject
+public class HappyHitObject : HitObject
 {
     protected override void UpdateVisuals()
     {
@@ -17,14 +17,9 @@ public class TapHitObject : HitObject
         if (Input.GetKeyDown(_data.hitKey))
         {
             float diff = Mathf.Abs(_elapsedTime - _data.hitTime);
-            
             if (diff <= hitWindow)
             {
-                OnResult("Hit! Perfect");
-            }
-            else
-            {
-                OnResult("Too Early");
+                OnResult("Hit! Perfect!");
             }
         }
     }

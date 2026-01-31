@@ -50,8 +50,12 @@ public abstract class HitObject : MonoBehaviour
     protected void OnResult(string msg)
     {
         if (_isProcessed) return;
-        
         _isProcessed = true;
+
+        if (msg.Contains("Hit") && LevelManager.Instance != null)
+        {
+            LevelManager.Instance.AddProgress();
+        }
         Debug.Log(msg);
         OnObjectDestroyed?.Invoke(_data.hitKey);
         Destroy(gameObject);
