@@ -2,27 +2,23 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class HitObject : MonoBehaviour
+public abstract class HitObject : MonoBehaviour
 {
-    [Header("References")]
+    [Header("Base References")]
     public Transform approachCircle;
-    public event Action<KeyCode> OnObjectDestroyed;
     public TMP_Text keyText;
+    public event Action<KeyCode> OnObjectDestroyed;
 
-    [Header("Settings")]
-    public float approachTime = 1.0f;
+    [Header("Base Settings")]
     public float hitWindow = 0.15f;
-
     public float startScale = 3.0f;
     public float endScale = 1.0f;
 
+    protected HitObjectData _data;
+    protected float _elapsedTime = 0f;
+    protected bool _isProcessed = false;
 
-    private HitObjectData _data;
-    private float _elapsedTime = 0f;
-    private bool _isInitialized = false;
-    private bool _isProcessed = false;
-
-    public void Initialize(HitObjectData data)
+    public virtual void Initialize(HitObjectData data)
     {
         _data = data;
         transform.position = new Vector3(data.position.x, data.position.y, 0);
@@ -30,23 +26,16 @@ public class HitObject : MonoBehaviour
         {
             keyText.text = data.hitKey.ToString();
         }
-        _isInitialized = true;
     }
 
-    void Update()
+    protected virtual void Update()
     {
-        _elapsedTime += Time.deltaTime;
-        float t = _elapsedTime / _data.hitTime;
+        if (_isProcessed) return;
 
-        if (approachCircle != null)
-        {
-            float scale = Mathf.Lerp(startScale, endScale, Mathf.Clamp01(t));
-            approachCircle.localScale = new Vector3(scale, scale, 1);
-        }
-        if (Input.GetKeyDown(_data.hitKey))
-        {
-            CheckHit();
-        }
+        _elapsedTime += Time.deltaTime;
+
+        UpdateVisuals();
+        CheckInput();
 
         if (_elapsedTime >= _data.hitTime + hitWindow)
         {
@@ -54,21 +43,17 @@ public class HitObject : MonoBehaviour
         }
     }
 
-    private void CheckHit()
-    {
-        float diff = Mathf.Abs(_elapsedTime - _data.hitTime);
-        if (diff <= hitWindow)
-        {
-            OnResult("Hit! Perfect!");
-        }
-    }
+    protected abstract void UpdateVisuals();
 
-    private void OnResult(string msg)
+    protected abstract void CheckInput();
+
+    protected void OnResult(string msg)
     {
+        if (_isProcessed) return;
+        
         _isProcessed = true;
         Debug.Log(msg);
         OnObjectDestroyed?.Invoke(_data.hitKey);
         Destroy(gameObject);
     }
-
 }
