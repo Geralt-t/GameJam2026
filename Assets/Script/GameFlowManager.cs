@@ -1,14 +1,19 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine.UI;
 
 public class GameFlowManager : MonoBehaviour
 {
     [Header("Boss Settings")]
     public BossNPCController bossController; 
-
+    
     [Header("NPC List")]
-    public List<NPCController> npcList; 
+    public List<NPCController> npcList;
+
+    public GameObject progressSlider;
+    public GameObject timerText;
     
     [Header("System References")]
     public LevelManager levelManager;
@@ -70,7 +75,7 @@ public class GameFlowManager : MonoBehaviour
             }
             
             yield return new WaitUntil(() => dialoguePart1Done);
-
+            backGroundGameUI.SetActive(true);
             // BƯỚC 2: Hiện Mask Vỡ và CHỜ CLICK (Giữ nguyên)
             if (npc.maskObject != null)
             {
@@ -78,7 +83,8 @@ public class GameFlowManager : MonoBehaviour
                 npc.maskObject.gameObject.SetActive(true);
                 npc.maskObject.spriteRenderer.sprite = npc.maskBrokenSprite;
                 npc.maskObject.ShowMaskAnimated();
-
+                progressSlider.SetActive(false);
+                timerText.SetActive(false);
                 Debug.Log("Đã hiện Mask, chờ click...");
 
                 bool isMaskClicked = false;
@@ -94,11 +100,13 @@ public class GameFlowManager : MonoBehaviour
             }
 
             // BƯỚC 3: Vào Game Puzzle (Giữ nguyên)
+            progressSlider.SetActive(true);
+            timerText.SetActive(true);
             if (npc.levelData != null)
             {
                 if(npc.maskObject != null) npc.maskObject.gameObject.SetActive(false);
 
-                backGroundGameUI.SetActive(true);
+                
                 levelManager.StartLevel(npc.levelData);
                 
                 yield return new WaitUntil(() => levelManager.IsGameFinished);
@@ -110,7 +118,11 @@ public class GameFlowManager : MonoBehaviour
                 npc.maskObject.gameObject.SetActive(true);
                 npc.maskObject.HealMask(); 
                 Debug.Log("Game Win! Mặt nạ lành.");
+                
+                yield return new WaitForSeconds(2f);
+                npc.maskObject.gameObject.SetActive(false);
                 backGroundGameUI.SetActive(false);
+                
                 // --- LOGIC MỚI: CHẠY CÂU THOẠI CUỐI CÙNG ---
                 if (totalLines > 1)
                 {
@@ -136,7 +148,7 @@ public class GameFlowManager : MonoBehaviour
                 yield return new WaitForSeconds(1.5f);
                 
                 // Dọn dẹp
-                npc.maskObject.gameObject.SetActive(false);
+               
             }
             
             backGroundGameUI.SetActive(false);

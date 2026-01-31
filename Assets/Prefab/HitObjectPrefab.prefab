@@ -310,9 +310,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f44cd2ec74bc24dabbc0e36bef720a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  approachCircle: {fileID: 7187570087135925764}
-  keyText: {fileID: 4496761659676954481}
   hitWindow: 0.15
+  approachCircle: {fileID: 7187570087135925764}
+  circleSprite: {fileID: 8155629422893635498}
+  keyText: {fileID: 4496761659676954481}
   startScale: 3
   endScale: 1
 --- !u!1 &8605282135394658205
