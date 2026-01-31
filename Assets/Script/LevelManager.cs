@@ -49,7 +49,7 @@ public class LevelManager : MonoBehaviour
         // 2. Kiểm tra điều kiện KẾT THÚC (Hết giờ)
         if (_levelTimer <= 0)
         {
-            FinishGame(); // Hết giờ -> Xong game (Thắng hay thua tùy logic bạn muốn xử lý thêm)
+            StartLevel(_currentLevelData);// Hết giờ -> Xong game (Thắng hay thua tùy logic bạn muốn xử lý thêm)
             return;
         }
 
@@ -67,6 +67,7 @@ public class LevelManager : MonoBehaviour
     {
         if (data == null)
         {
+            
             Debug.LogError("LevelData truyền vào bị null!");
             // Set luôn là true để GameFlow không bị treo mãi mãi
             IsGameFinished = true; 
@@ -74,7 +75,7 @@ public class LevelManager : MonoBehaviour
         }
 
         _currentLevelData = data;
-        
+        AudioManager.Instance.PlayMusic((_currentLevelData.levelName));
         // Reset trạng thái game
         IsGameFinished = false;
         _levelTimer = _currentLevelData.levelDuration;
@@ -108,8 +109,10 @@ public class LevelManager : MonoBehaviour
 
     private void FinishGame()
     {
-        IsGameFinished = true; // Bật cờ này để GameFlowManager biết mà chạy tiếp
-        ClearAllNotes();       // Dọn dẹp màn hình
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlayMusic("default");
+        IsGameFinished = true; 
+        ClearAllNotes();       
     }
 
     private void ClearAllNotes()
