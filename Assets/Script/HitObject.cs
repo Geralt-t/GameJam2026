@@ -22,7 +22,11 @@ public abstract class HitObject : MonoBehaviour
 
     private void Update()
     {
-        if (_hasHit) return;
+        if (_hasHit)
+        {
+           
+            return;
+        }
 
         // 1. Kiểm tra nếu hết giờ (Miss)
         if (_timeAlive > _data.hitTime + hitWindow)
@@ -46,6 +50,7 @@ public abstract class HitObject : MonoBehaviour
     protected virtual void OnSuccess()
     {
         _hasHit = true;
+        AudioManager.Instance.PlaySFX("ping");
         LevelManager.Instance.AddProgress();
         Destroy(gameObject);
     }
