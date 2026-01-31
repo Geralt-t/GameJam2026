@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c87c4c0ef609c945bdca3771113e906, type: 3}
   m_Name: LevelSurprise
   m_EditorClassIdentifier: 
-  levelName: Level Surprise
+  levelName: surprise
   notePrefab: {fileID: 7625429032603459277, guid: 7e43e50da53116e49b23063a7e69f3af, type: 3}
   levelDuration: 50
   progressPerHit: 10
@@ -20,6 +20,6 @@ MonoBehaviour:
   maxSpawnDelay: 1.5
   minApproachTime: 0.5
   maxApproachTime: 1
-  hitWindow: 0.15
-  minStepDistance: 2
-  maxStepDistance: 5
+  hitWindow: 0.12
+  minStepDistance: 1
+  maxStepDistance: 3

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c87c4c0ef609c945bdca3771113e906, type: 3}
   m_Name: LevelHappy
   m_EditorClassIdentifier: 
-  levelName: LevelHappy
+  levelName: happy
   notePrefab: {fileID: 7625429032603459277, guid: 7e43e50da53116e49b23063a7e69f3af, type: 3}
   levelDuration: 50
   progressPerHit: 10
-  minSpawnDelay: 3
-  maxSpawnDelay: 4
-  minApproachTime: 1
-  maxApproachTime: 2
+  minSpawnDelay: 2
+  maxSpawnDelay: 3
+  minApproachTime: 0.8
+  maxApproachTime: 1.2
   hitWindow: 0.15
   minStepDistance: 1
   maxStepDistance: 3
